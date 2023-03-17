@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const User = require('../database/Schemas/User')
 const { hashPassword, comparePassword } = require('../utils/helpers')
+const passport = require('passport')
 
 const router = Router()
 
@@ -13,23 +14,10 @@ router.get('/', async (req, res) => {
     else res.sendStatus(400)
 })
 
-router.post('/login', async (req,res) => {
-    const { username, password } = req.body
-    if(!username || !password) return res.send(400)
-
-    const userDB = await User.findOne({ username })
-    if(userDB){
-        if(comparePassword(password, userDB.password)){
-            session = req.session
-            session.userid = username
-            res.sendStatus(200)
-        }
-        else{
-            res.sendStatus(400)
-        }
-    }
-    else return res.send('User doesnt found')
+router.post('/login', passport.authenticate('local'), (req,res) => {
+    res.sendStatus(200)
 })
+
 router.post('/register', async (req, res) => {
     const { username, password, secret } = req.body
     if(!username || !password) return res.sendStatus(400)

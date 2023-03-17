@@ -10,10 +10,10 @@ function comparePassword(raw, hashed){
     return bcrypt.compareSync(raw, hashed)
 }
 
-async function isLogged(username){
-    const userDB = await User.findOne({ username })
-    if(userDB) return userDB
-    else return false
+async function isLogged(passport){
+    const user = await User.findById(passport.user)
+    if(!user) return false
+    else return user
 }
 
 module.exports = {
