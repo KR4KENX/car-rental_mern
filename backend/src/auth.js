@@ -25,10 +25,10 @@ router.post('/register', async (req, res) => {
     const userDB = await User.findOne({ username })
     if(userDB) return res.sendStatus(400)
     else{
-        if(!secret || secret !== 'secrettokenforadmin') await User.create({username: username, password: hashPassword(password), isAdmin: false})
         if(secret === 'secrettokenforadmin'){
             await User.create({username: username, password: hashPassword(password), isAdmin: true})
         }
+        else await User.create({username: username, password: hashPassword(password), isAdmin: false})
         res.sendStatus(201)
     }
 })

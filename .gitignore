@@ -72,6 +72,13 @@ typings/
 .env
 .env.test
 
+robots.txt
+
+manifest.json
+favicon.ico
+*.json
+logo*.png
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 
