@@ -6,8 +6,9 @@ const Car = require('../database/Schemas/Car')
 const router = Router()
 
 router.get('/', async (req, res) => {
+    if(!req.session.passport) return res.sendStatus(400)
     const user = await isLogged(req.session.passport)
-    if(!user) return res.sendStatus(400)
+    if(!user) return res.send('not logged')
 
     const allCars = await Car.find()
     const carsToSend = []
@@ -23,7 +24,10 @@ router.get('/', async (req, res) => {
             carsToSend.push(car)
         }
     })
-    res.send(carsToSend)
+    res.send({
+        user: user.username,
+        cars: carsToSend
+    })
 })
 
 router.get('/admin', async (req, res) => {

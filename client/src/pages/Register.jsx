@@ -1,29 +1,36 @@
 import { useState, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 function Register() {
   const [registerData, setRegisterData] = useState({username: '', password: '', terms: false, voucher: ''})
   const invalidPassword = useRef()
   const invalidTerms = useRef()
+  const navigate = useNavigate()
   
   const handleInput = ({ target: { name, value, checked } }) => {
     if(name !== 'terms'){
-      setRegisterData({ ...registerData, [name]: value });
+      setRegisterData((prev) => ({ ...prev, [name]: value }));
     }
     else{
-      setRegisterData({...registerData, terms: checked})
+      setRegisterData((prev) => ({...prev, terms: checked}))
     }
-    console.log(registerData)
   };
   
   const handleSubmit = (e) => {
     e.preventDefault()
-    if(registerData.password.indexOf(' ') != -1 || registerData.password.length < 8 || registerData.password.length > 20){
+    if(registerData.password.indexOf(' ') !== -1 || registerData.password.length < 4 || registerData.password.length > 10){
       invalidPassword.current.style.display = 'block'
     }
     if(registerData.terms === false){
       invalidTerms.current.style.display = 'block'
     }
+    const dataObj = {username: registerData.username, password: registerData.password, secret: registerData.voucher}
+    const instance = axios.create({withCredentials: true})
+    instance.post('http://localhost:8080/auth/register', dataObj).then((res) => {
+      console.log(res)
+      if(res.status === 201) navigate('/login')
+    })
   }
 
   return (
@@ -41,12 +48,12 @@ function Register() {
             Incorrect password.
           </div>
           <div className="form-text">
-            Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces.
+            Your password must be 4-10 characters long, contain letters and numbers, and must not contain spaces.
           </div>
        </div>
        <div className="mb-3">
           <label className="form-label text-light">Voucher code</label>
-          <input type="text" name='voucher' className="form-control" required onInput={(e) => handleInput(e)}/>
+          <input type="text" name='voucher' className="form-control" onInput={(e) => handleInput(e)}/>
         </div>
         <div className="mb-3">
           <input className="form-check-input" name='terms' type="checkbox" id='terms' onInput={(e) => handleInput(e)} required />
@@ -55,7 +62,7 @@ function Register() {
           </label>
           <div ref={invalidTerms} className="invalid-feedback">
             You must agree before submitting.
-        </div>
+          </div>
       </div>
       </form>
       <button type="submit" onClick={(e) => handleSubmit(e)} className="btn btn-primary mx-auto">Submit</button>

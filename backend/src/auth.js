@@ -1,17 +1,16 @@
 const { Router } = require('express')
 const User = require('../database/Schemas/User')
-const { hashPassword, comparePassword } = require('../utils/helpers')
+const { hashPassword, comparePassword, isLogged } = require('../utils/helpers')
 const passport = require('passport')
 
 const router = Router()
 
 router.get('/', async (req, res) => {
-    if(req.session.userid){
-        const userDB = await User.findOne({username: req.session.userid})
-        if(userDB.isAdmin) res.send('admin')
-        else res.send('user')
-    }
-    else res.sendStatus(400)
+    if(!req.session.passport) return res.send('not logged')
+
+    const user = await isLogged(req.session.passport)
+    res.send(user.username)
+    // res.send(req.session.passport)
 })
 
 router.post('/login', passport.authenticate('local'), (req,res) => {
@@ -31,6 +30,11 @@ router.post('/register', async (req, res) => {
         else await User.create({username: username, password: hashPassword(password), isAdmin: false})
         res.sendStatus(201)
     }
+})
+
+router.get('/logout', (req, res) => {
+    req.session.destroy()
+    res.sendStatus(200)
 })
 
 module.exports = router

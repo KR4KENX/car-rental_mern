@@ -11,6 +11,7 @@ function comparePassword(raw, hashed){
 }
 
 async function isLogged(passport){
+    if(passport === undefined) return false
     const user = await User.findById(passport.user)
     if(!user) return false
     else return user
