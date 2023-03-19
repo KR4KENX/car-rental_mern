@@ -18,16 +18,13 @@ router.get('/', async (req, res) => {
             car.occupied.forEach(occupation => {
                 occupations.push({from: occupation.from, to: occupation.to})
             })
-            carsToSend.push({_id: car._id, name: car.name, price: car.price, occupied: occupations})
+            carsToSend.push({_id: car._id, name: car.name, price: car.price, occupied: occupations, img: car.img})
         }
         else{
             carsToSend.push(car)
         }
     })
-    res.send({
-        user: user.username,
-        cars: carsToSend
-    })
+    res.send(carsToSend)
 })
 
 router.get('/admin', async (req, res) => {
@@ -44,7 +41,19 @@ router.get('/:name', async (req, res) => {
     if(!user) return res.sendStatus(400)
 
     const car = await Car.findOne({name: req.params.name})
-    res.send(car)
+    const carToSend = []
+    if(car.occupied.length > 0){
+        const occupations = []
+        car.occupied.forEach(occupation => {
+            occupations.push({from: occupation.from, to: occupation.to})
+        })
+        carToSend.push({_id: car._id, name: car.name, price: car.price, occupied: occupations, img: car.img})
+    }
+    else{
+        carToSend.push(car)
+    }
+
+    res.send(carToSend)
 })
 
 router.post('/reserve', async (req, res) => {
@@ -53,6 +62,7 @@ router.post('/reserve', async (req, res) => {
 
     const { car, termFrom, termTo } = req.body
     const carDB = await Car.findOne({ name: car })
+    if(!carDB) return res.sendStatus(400)
 
     await carDB.updateOne({$push: {occupied: {from: termFrom, to: termTo, by: user.username}}})
 
@@ -71,8 +81,8 @@ router.post('/create', async (req, res) => {
     const user = await isLogged(req.session.passport)
     if(!user.isAdmin) return res.sendStatus(400)
 
-    const { name, price} = req.body
-    await Car.create({name, price})
+    const { name, price, img} = req.body
+    await Car.create({name, price, img})
     res.sendStatus(201)
 })
 

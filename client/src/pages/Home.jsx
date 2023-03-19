@@ -1,14 +1,9 @@
-import { useEffect, useState } from 'react'
-import axios from 'axios'
+import UserDashboard from '../components/UserDashboard'
 
 function Home(props) {
-  
-  useEffect(() => {
-    
-  }, [])
   return (
     <div>
-      {props.logged ? "Content" : "You must be logged in to see this page"}
+      {props.logged === '' ? "You must be logged in to see this page" : <UserDashboard />}
     </div>
   )
 }

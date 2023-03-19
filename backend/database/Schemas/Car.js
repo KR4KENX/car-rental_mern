@@ -12,6 +12,9 @@ const CarSchema = new mongoose.Schema({
     occupied: {
         type: Array,
         default: []
+    },
+    img: {
+        type: mongoose.SchemaTypes.String,
     }
 })
 

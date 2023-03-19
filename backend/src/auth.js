@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
     if(!req.session.passport) return res.send('not logged')
 
     const user = await isLogged(req.session.passport)
-    res.send(user.username)
+    res.send({username: user.username, isAdmin: user.isAdmin})
     // res.send(req.session.passport)
 })
 

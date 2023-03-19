@@ -1,3 +1,8 @@
 body{
     box-sizing: border-box;
+    background: url('./images/bg.jpg');
+    background-size: 100%;
+    background-repeat: repeat;
+    background-position: center center;
+    background-attachment: fixed;
 }

@@ -20,9 +20,7 @@ function Login() {
         navigate('/')
       }
     }).catch(err => {
-      if(err.code === 'ERR_BAD_RESPONSE'){
         notLogged.current.style.display = 'block'
-      }
     })
   }
   return (

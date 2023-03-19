@@ -15,15 +15,18 @@ function Register() {
     else{
       setRegisterData((prev) => ({...prev, terms: checked}))
     }
+    console.log(registerData)
   };
   
   const handleSubmit = (e) => {
     e.preventDefault()
     if(registerData.password.indexOf(' ') !== -1 || registerData.password.length < 4 || registerData.password.length > 10){
       invalidPassword.current.style.display = 'block'
+      return;
     }
     if(registerData.terms === false){
       invalidTerms.current.style.display = 'block'
+      return;
     }
     const dataObj = {username: registerData.username, password: registerData.password, secret: registerData.voucher}
     const instance = axios.create({withCredentials: true})
