@@ -45,7 +45,8 @@ router.get('/:name', async (req, res) => {
     if(car.occupied.length > 0){
         const occupations = []
         car.occupied.forEach(occupation => {
-            occupations.push({from: occupation.from, to: occupation.to})
+            const days = Math.ceil((Date.parse(occupation.to) - Date.parse(occupation.from)) / (1000 * 3600 * 24))
+            occupations.push({from: occupation.from, to: occupation.to, forDays: days})
         })
         carToSend.push({_id: car._id, name: car.name, price: car.price, occupied: occupations, img: car.img})
     }

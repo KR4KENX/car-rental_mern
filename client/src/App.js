@@ -54,7 +54,7 @@ function App() {
   const LoggedComponent = () => {
     return (
     <div className='d-flex flex-column justify-content-center align-items-center text-light mx-4'>
-      <img role='button' src={LogoutIcon} onClick={() => {
+      <img role='button' alt='logout' src={LogoutIcon} onClick={() => {
         axios.get('http://localhost:8080/auth/logout', { withCredentials: true }).then((e) => navigate('/login'))
       }} />
       <p>{user}</p>

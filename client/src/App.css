@@ -6,3 +6,10 @@ body{
     background-position: center center;
     background-attachment: fixed;
 }
+.react-calendar__tile:disabled{
+    background-color: #d5d5d5 !important;
+}
+#invisible{
+    transition: .5s ease-in-out;
+    opacity: 0;
+}

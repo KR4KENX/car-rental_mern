@@ -17,11 +17,11 @@ function UserDashboard() {
         return (
             <>
                 <h1>Ours cars</h1>
-                <div className='d-flex flex-row align-items-baseline justify-content-center my-3 p-4'>
+                <div className='d-flex flex-row align-items-baseline justify-content-center my-3 p-2'>
                 {cars.map((car, key) => {
                     return(
                     <div key={key} className='d-flex flex-column align-items-center'>
-                        <h2>{car.name}</h2>
+                        <h2>{car.name.replace('-', ' ')}</h2>
                         <img className='w-50' src={car.img} alt='car-img' />
                         <p className='fs-4'>Price: {car.price}$</p>
                         <button className='btn btn-primary w-25'><Link className='link-light' to={'/'+car.name.replace(' ','-')}>Rent</Link></button>
@@ -33,7 +33,7 @@ function UserDashboard() {
         )
     }
   return (
-    <div className='container bg-light text-dark text-center'>
+    <div className='container bg-light text-dark text-center p-4'>
       {cars === undefined ? 'Loading...' : <CarsList />}
     </div>
   )
