@@ -4,6 +4,7 @@ import Back from '../images/back.svg'
 import axios from 'axios' 
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
+import Modal from './elements/Modal'
 
 function CarRent() {
     const [car, setCar] = useState()
@@ -16,13 +17,11 @@ function CarRent() {
     const modal = useRef()
 
     useEffect(() => {
-        console.log('loading from server...')
         const instance = axios.create({withCredentials: true})
         instance.get('http://localhost:8080/cars'+location.pathname).then((res) => {
             setCar(res.data[0])
             setReservedDates(getReservedDays(res.data[0].occupied))
         }).catch(err => {
-            console.log(err)
         })
     }, [location.pathname, toggleReservationMade])
 
@@ -35,7 +34,7 @@ function CarRent() {
         })
         return occupiedDates
     }
-    
+
     const handleSubmit = (e) => {
          e.preventDefault()
 
@@ -44,22 +43,13 @@ function CarRent() {
             termFrom: String(new Date(reserveDate[0].setHours(0,0,0))),
             termTo: String(new Date(reserveDate[1].setHours(0,0,0)))
         }
-        console.log(dataObj)
         const instance = axios.create({withCredentials: true})
         instance.post('http://localhost:8080/cars/reserve', dataObj).then((res) => {
             modalVisibilityHandler()
             setReservationConfirm(res.data)
             setToggleReservationMade(!toggleReservationMade)
         }).catch(err => {
-            console.log(err)
         })
-    }
-
-    const modalVisibilityHandler = () => {
-        modal.current.id = ''
-            setTimeout(() => {
-                modal.current.id = 'invisible'
-            }, 2000)
     }
 
     const CalendarTile = () => {
@@ -81,8 +71,8 @@ function CarRent() {
         return (
         <>
             <div className='d-flex flex-column align-items-center w-50'>
-                <h1>{car.name.replace('-', ' ')}</h1>
-                <p className='fs-2'>{car.price}$</p>
+                <h2>{car.name.replace('-', ' ')}</h2>
+                <p className='fs-3'>{car.price}$ / per day</p>
                 <img className='w-50' src={car.img} alt='car-img'/>
             </div>
             <div className='d-flex flex-column align-items-center w-50'>
@@ -91,20 +81,21 @@ function CarRent() {
         </>
         )
     }
-    
-    const Modal = () => {
-        return (
-            <>
-            <p>Your car: <br></br><span className='fs-3'>{reservationConfirm.car.replace('-', ' ')}</span></p>
-            <p>Reserved for: <br></br><span className='fs-3'>{reservationConfirm.days} days</span></p>
-            <p>Price: <br></br><span className='fs-3'>{reservationConfirm.price} $</span></p>
-            </>
-        )
+
+    const modalVisibilityHandler = () => {
+        if(modal === null) return
+
+        modal.current.style.transition = '.3s ease-in-out'
+        modal.current.id = 'visible'
+            setTimeout(() => {
+                modal.current.id = 'invisible'
+            }, 3500)
     }
+    console.log(modal)
   return (
     <div className='container bg-light text-dark text-left p-3 position-relative'>
-        <div ref={modal} id='invisible' className='d-flex flex-row justify-content-around gap-3 position-absolute start-50 translate-middle bg-warning w-50 text-dark p-3 text-center'>
-            {reservationConfirm !== undefined ? <Modal /> : ''}
+        <div ref={modal} id='invisible' className=' bg-warning w-50 text-dark p-3 text-center mx-auto mt-3 fixed-top shadow rounded'>
+            {reservationConfirm !== undefined ? <Modal action={'Order confirmation'} car={reservationConfirm.car} days={reservationConfirm.days} price={reservationConfirm.price} from={reservationConfirm.from} to={reservationConfirm.to} /> : ''}
         </div>
         <div className='mt-4' role='button' onClick={() => navigate('/')}>
             <img src={Back} alt='back' />

@@ -23,7 +23,7 @@ function UserDashboard() {
                     <div key={key} className='d-flex flex-column align-items-center'>
                         <h2>{car.name.replace('-', ' ')}</h2>
                         <img className='w-50' src={car.img} alt='car-img' />
-                        <p className='fs-4'>Price: {car.price}$</p>
+                        <p className='fs-4'>Price: <b>{car.price}$</b></p>
                         <button className='btn btn-primary w-25'><Link className='link-light' to={'/'+car.name.replace(' ','-')}>Rent</Link></button>
                     </div>
                     )

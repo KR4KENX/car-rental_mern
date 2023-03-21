@@ -73,7 +73,9 @@ router.post('/reserve', async (req, res) => {
     const reservationInfo = {
         days: days,
         car: car,
-        price: carPrice
+        price: carPrice,
+        from: termFrom,
+        to: termTo
     }
     res.send(reservationInfo)
 })
@@ -85,6 +87,19 @@ router.post('/create', async (req, res) => {
     const { name, price, img} = req.body
     await Car.create({name, price, img})
     res.sendStatus(201)
+})
+
+router.post('/delete', async (req, res) => {
+    const user = await isLogged(req.session.passport)
+    if(!user.isAdmin) return res.sendStatus(400)
+
+    const { order, car } = req.body
+
+    const carDB = await Car.updateOne(
+        { name: car },
+        { $pull: { 'occupied': { by: order.by, from: order.from, to: order.to } } }
+    )
+    res.send(carDB)
 })
 
 module.exports = router
