@@ -1,7 +1,6 @@
-Hi! Thanks for looking here! Project is in build now 🏗️ But soon I will be proud to show the results
+## Heading level 2 Hi! Thanks for looking here! Project is in build now 🏗️ But soon I will be proud to show the results
 21.03
-Project is in final version now! You can see it on
-https://www.youtube.com/watch?v=PE2qmve0fqE
+# Heading level 1 Project is in final version now! You can see it on https://www.youtube.com/watch?v=PE2qmve0fqE
  Done: 
     ✅ Reservation system (on backend) 
     ✅ Auth system 
